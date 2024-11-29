@@ -4,16 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intercambio</title>
-</head>
-<body> 
-    <h1>Intercambio :D</h1>
-    <input type="text" id="valorInput" placeholder="Nombre">
-    <button onclick="insertar()">Insertar nombre</button>
-    <button onclick="mostrarNombres()">Mostrar nombres</button>
-    <button onclick="generarAsignaciones()">Generar asignaciones</button>
-    <button onclick="borrar()">Borrar datos</button>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
 
-    <p id="resultado"></p>
+        h1 {
+            font-size: 2rem;
+            color: #444;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Contenedor principal */
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Estilo para los inputs y botones */
+        input[type="text"] {
+            padding: 12px;
+            width: 70%;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007BFF;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background-color: #B0C4DE;
+            cursor: not-allowed;
+        }
+
+        /* Estilo para el área de resultados */
+        #resultado {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .asignaciones {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #444;
+            line-height: 1.6;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            text-align: left;
+        }
+
+        .asignacion-item {
+            margin-bottom: 10px;
+        }
+
+        .asignacion-item span {
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Intercambio :D</h1>
+        <input type="text" id="valorInput" placeholder="Nombre">
+        <div>
+            <button onclick="insertar()">Insertar nombre</button>
+            <button onclick="mostrarNombres()">Mostrar nombres</button>
+            <button onclick="generarAsignaciones()">Generar asignaciones</button>
+            <button onclick="borrar()">Borrar datos</button>
+        </div>
+        <p id="resultado"></p>
+        <div class="asignaciones" id="asignacionesContainer"></div>
+    </div>
 
     <script>
         // Declarar variables
@@ -95,21 +197,23 @@
         }
 
         function mostrarAsignaciones() {
-            let resultado = "";
+            const asignacionesContainer = document.getElementById("asignacionesContainer");
+            asignacionesContainer.innerHTML = ''; // Limpiar asignaciones previas
 
+            let resultado = "";
             for (let i = 0; i < nombres.length; i++) {
-                // Mostrar asignaciones
                 let asignadoA = nombres[asignaciones[i]];
-                resultado += `${nombres[i]} le regala a ${asignadoA}<br>`;
+                resultado += `<div class="asignacion-item">${nombres[i]} le regala a <span>${asignadoA}</span></div>`;
             }
 
-            document.getElementById("resultado").innerHTML = resultado;
+            asignacionesContainer.innerHTML = resultado;
         }
 
         function borrar() {
             nombres = [];
             asignaciones = [];
             document.getElementById("resultado").textContent = "Datos borrados.";
+            document.getElementById("asignacionesContainer").innerHTML = '';
         }
     </script>
 </body>
