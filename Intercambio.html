@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intercambio</title>
+</head>
+<body> 
+    <h1>Intercambio :D</h1>
+    <input type="text" id="valorInput" placeholder="Nombre">
+    <button onclick="insertar()">Insertar nombre</button>
+    <button onclick="mostrarNombres()">Mostrar nombres</button>
+    <button onclick="generarAsignaciones()">Generar asignaciones</button>
+    <button onclick="borrar()">Borrar datos</button>
+
+    <p id="resultado"></p>
+
+    <script>
+        // Declarar variables
+        let nombres = []; // Lista de nombres
+        let asignaciones = []; // Array de asignaciones
+
+        function insertar() {
+            // Obtener el valor del input
+            let valor = document.getElementById("valorInput").value;
+
+            // Agregar el valor a la lista de nombres si no está vacío
+            if (valor) {
+                if (!nombres.includes(valor)) {
+                    nombres.push(valor);
+                    document.getElementById("resultado").textContent = `Nombre "${valor}" agregado.`;
+                } else {
+                    document.getElementById("resultado").textContent = `El nombre "${valor}" ya está en la lista.`;
+                }
+                document.getElementById("valorInput").value = ""; // Limpiar el input
+            } else {
+                document.getElementById("resultado").textContent = "Por favor, introduce un nombre.";
+            }
+        }
+
+        function mostrarNombres() {
+            if (nombres.length > 0) {
+                document.getElementById("resultado").textContent = `Nombres: ${nombres.join(", ")}`;
+            } else {
+                document.getElementById("resultado").textContent = "La lista de nombres está vacía.";
+            }
+        }
+
+        function generarAsignaciones() {
+            if (nombres.length < 2) {
+                document.getElementById("resultado").textContent = "Se necesitan al menos dos personas para generar asignaciones.";
+                return;
+            }
+
+            let indicesDisponibles = [...Array(nombres.length).keys()];
+
+            // Bucle para garantizar que no haya ciclos de intercambio mutuo
+            let asignacionesGeneradas = false;
+
+            while (!asignacionesGeneradas) {
+                // Barajar los índices aleatorios usando Fisher-Yates
+                for (let i = indicesDisponibles.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [indicesDisponibles[i], indicesDisponibles[j]] = [indicesDisponibles[j], indicesDisponibles[i]]; // Intercambiar
+                }
+
+                // Generar asignaciones sin ciclos (no regalar a sí mismo y no asignar en ciclo mutuo)
+                asignaciones = [];
+                let valido = true;
+                for (let i = 0; i < nombres.length; i++) {
+                    let indexAsignado = indicesDisponibles[i];
+
+                    // Asegurarse de que nadie se asigne a sí mismo
+                    if (indexAsignado === i) {
+                        valido = false;
+                        break;
+                    }
+
+                    // Asegurarse de que no haya ciclo mutuo (A no le regale a B si B ya le regaló a A)
+                    if (asignaciones[indexAsignado] === i) {
+                        valido = false;
+                        break;
+                    }
+
+                    asignaciones.push(indexAsignado);
+                }
+
+                // Si no hay ciclos ni personas que se asignen a sí mismas, se acepta la asignación
+                if (valido) {
+                    asignacionesGeneradas = true;
+                }
+            }
+
+            mostrarAsignaciones();
+        }
+
+        function mostrarAsignaciones() {
+            let resultado = "";
+
+            for (let i = 0; i < nombres.length; i++) {
+                // Mostrar asignaciones
+                let asignadoA = nombres[asignaciones[i]];
+                resultado += `${nombres[i]} le regala a ${asignadoA}<br>`;
+            }
+
+            document.getElementById("resultado").innerHTML = resultado;
+        }
+
+        function borrar() {
+            nombres = [];
+            asignaciones = [];
+            document.getElementById("resultado").textContent = "Datos borrados.";
+        }
+    </script>
+</body>
+</html>
