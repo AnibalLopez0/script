@@ -7,6 +7,10 @@
     <style>
         /* Estilos generales */
         body {
+            background-image: url('https://imgs.search.brave.com/8AmmCY8MIxh8w-Yn8pFfqm6OJ_MjxqLCLvGw2mJpiFI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzk0LzQx/L2U2Lzk0NDFlNjZi/ZTA1YjYxMDI3YTJh/MDk0ZDhhNjk0NmFk/LmpwZw');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
             font-family: 'Arial', sans-serif;
             background-color: #f7f7f7;
             margin: 0;
@@ -20,15 +24,15 @@
 
         h1 {
             font-size: 2rem;
-            color: #444;
+            color: #000000;
             margin-bottom: 20px;
             text-align: center;
         }
 
         /* Contenedor principal */
         .container {
-            background-color: #fff;
-            border-radius: 8px;
+            background-color: #0eece1;
+            border-radius: 100px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             padding: 30px;
             text-align: center;
@@ -103,12 +107,12 @@
     </style>
 </head>
 <body>
-
-    <div class="container">
+    
+      <div class="container">
         <h1>Intercambio :D</h1>
         <input type="text" id="valorInput" placeholder="Nombre">
         <div>
-            <button onclick="insertar()">Insertar nombre</button>
+            <button  onclick="insertar()">Insertar nombre</button>
             <button onclick="mostrarNombres()">Mostrar nombres</button>
             <button onclick="generarAsignaciones()">Generar asignaciones</button>
             <button onclick="borrar()">Borrar datos</button>
@@ -122,6 +126,16 @@
         let nombres = []; // Lista de nombres
         let asignaciones = []; // Array de asignaciones
 
+        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("keypress", function (e) {
+                if (e.key === "Enter") {
+                    // Simular clic en el botón "Insertar nombre"
+                    document.querySelector('button[onclick="insertar()"]').click();
+                }
+            });
+        });
+
+      
         function insertar() {
             // Obtener el valor del input
             let valor = document.getElementById("valorInput").value;
@@ -149,8 +163,8 @@
         }
 
         function generarAsignaciones() {
-            if (nombres.length < 2) {
-                document.getElementById("resultado").textContent = "Se necesitan al menos dos personas para generar asignaciones.";
+            if (nombres.length < 3) {
+                document.getElementById("resultado").textContent = "Se necesitan al menos tres personas para generar asignaciones.";
                 return;
             }
 
