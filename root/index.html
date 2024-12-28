@@ -1,7 +1,234 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intercambio</title>
+    <style>
+        /* Estilos generales */
+        body {
+            background-image: url('https://imgs.search.brave.com/8AmmCY8MIxh8w-Yn8pFfqm6OJ_MjxqLCLvGw2mJpiFI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzk0LzQx/L2U2Lzk0NDFlNjZi/ZTA1YjYxMDI3YTJh/MDk0ZDhhNjk0NmFk/LmpwZw');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #000000;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Contenedor principal */
+        .container {
+            background-color: #0eece1;
+            border-radius: 100px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Estilo para los inputs y botones */
+        input[type="text"] {
+            padding: 12px;
+            width: 70%;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007BFF;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background-color: #B0C4DE;
+            cursor: not-allowed;
+        }
+
+        /* Estilo para el área de resultados */
+        #resultado {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .asignaciones {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #444;
+            line-height: 1.6;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            text-align: left;
+        }
+
+        .asignacion-item {
+            margin-bottom: 10px;
+        }
+
+        .asignacion-item span {
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+    </style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    
+      <div class="container">
+        <h1>Intercambio :D</h1>
+        <input type="text" id="valorInput" placeholder="Nombre">
+        <div>
+            <button  onclick="insertar()">Insertar nombre</button>
+            <button onclick="mostrarNombres()">Mostrar nombres</button>
+            <button onclick="generarAsignaciones()">Generar asignaciones</button>
+            <button onclick="borrar()">Borrar datos</button>
+        </div>
+        <p id="resultado"></p>
+        <div class="asignaciones" id="asignacionesContainer"></div>
+    </div>
+
+    <script>
+        // Declarar variables
+        let nombres = []; // Lista de nombres
+        let asignaciones = []; // Array de asignaciones
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("keypress", function (e) {
+                if (e.key === "Enter") {
+                    // Simular clic en el botón "Insertar nombre"
+                    document.querySelector('button[onclick="insertar()"]').click();
+                }
+            });
+        });
+
+      
+        function insertar() {
+            // Obtener el valor del input
+            let valor = document.getElementById("valorInput").value;
+
+            // Agregar el valor a la lista de nombres si no está vacío
+            if (valor) {
+                if (!nombres.includes(valor)) {
+                    nombres.push(valor);
+                    document.getElementById("resultado").textContent = `Nombre "${valor}" agregado.`;
+                } else {
+                    document.getElementById("resultado").textContent = `El nombre "${valor}" ya está en la lista.`;
+                }
+                document.getElementById("valorInput").value = ""; // Limpiar el input
+            } else {
+                document.getElementById("resultado").textContent = "Por favor, introduce un nombre.";
+            }
+        }
+
+        function mostrarNombres() {
+            if (nombres.length > 0) {
+                document.getElementById("resultado").textContent = `Nombres: ${nombres.join(", ")}`;
+            } else {
+                document.getElementById("resultado").textContent = "La lista de nombres está vacía.";
+            }
+        }
+
+        function generarAsignaciones() {
+            if (nombres.length < 3) {
+                document.getElementById("resultado").textContent = "Se necesitan al menos tres personas para generar asignaciones.";
+                return;
+            }
+
+            let indicesDisponibles = [...Array(nombres.length).keys()];
+
+            // Bucle para garantizar que no haya ciclos de intercambio mutuo
+            let asignacionesGeneradas = false;
+
+            while (!asignacionesGeneradas) {
+                // Barajar los índices aleatorios usando Fisher-Yates
+                for (let i = indicesDisponibles.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [indicesDisponibles[i], indicesDisponibles[j]] = [indicesDisponibles[j], indicesDisponibles[i]]; // Intercambiar
+                }
+
+                // Generar asignaciones sin ciclos (no regalar a sí mismo y no asignar en ciclo mutuo)
+                asignaciones = [];
+                let valido = true;
+                for (let i = 0; i < nombres.length; i++) {
+                    let indexAsignado = indicesDisponibles[i];
+
+                    // Asegurarse de que nadie se asigne a sí mismo
+                    if (indexAsignado === i) {
+                        valido = false;
+                        break;
+                    }
+
+                    // Asegurarse de que no haya ciclo mutuo (A no le regale a B si B ya le regaló a A)
+                    if (asignaciones[indexAsignado] === i) {
+                        valido = false;
+                        break;
+                    }
+
+                    asignaciones.push(indexAsignado);
+                }
+
+                // Si no hay ciclos ni personas que se asignen a sí mismas, se acepta la asignación
+                if (valido) {
+                    asignacionesGeneradas = true;
+                }
+            }
+
+            mostrarAsignaciones();
+        }
+
+        function mostrarAsignaciones() {
+            const asignacionesContainer = document.getElementById("asignacionesContainer");
+            asignacionesContainer.innerHTML = ''; // Limpiar asignaciones previas
+
+            let resultado = "";
+            for (let i = 0; i < nombres.length; i++) {
+                let asignadoA = nombres[asignaciones[i]];
+                resultado += `<div class="asignacion-item">${nombres[i]} le regala a <span>${asignadoA}</span></div>`;
+            }
+
+            asignacionesContainer.innerHTML = resultado;
+        }
+
+        function borrar() {
+            nombres = [];
+            asignaciones = [];
+            document.getElementById("resultado").textContent = "Datos borrados.";
+            document.getElementById("asignacionesContainer").innerHTML = '';
+        }
+    </script>
 </body>
 </html>
